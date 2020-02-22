@@ -1,11 +1,17 @@
 fileFormatVersion: 2
-guid: fe6319cfde9154f48a1d65958ad90f3d
+guid: f0eae39896ebc493e94dc198470bafa4
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
   - first:
-      74: -623603649343465320
-    second: Scene
+      74: 4935637324533820027
+    second: Cat Bone|Normal
+  - first:
+      74: 7809849663369901712
+    second: Cat Bone|Runcycle
+  - first:
+      74: 1857910626087101333
+    second: Cat Bone|Walkcycle
   externalObjects: {}
   materials:
     materialImportMode: 1
