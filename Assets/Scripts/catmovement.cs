@@ -27,7 +27,7 @@ public class catmovement : MonoBehaviour
         heading = Random.Range(0, 360);
 
         //Rotate cat to face movement direction
-        transform.Rotate(0, heading - 45, 0);
+        transform.Rotate(0, heading + 90, 0);
 
         //Set walking to true to give cat time to move before first turn
         walking = true;
@@ -57,7 +57,7 @@ public class catmovement : MonoBehaviour
         heading = Random.Range(0, 360);
 
         //Rotate cat to face movement direction
-        transform.Rotate(0, heading - 45, 0);
+        transform.Rotate(0, heading + 90, 0);
 
         //Turn the cat's walking back on
         walking = true;
