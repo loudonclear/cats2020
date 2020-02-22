@@ -36,12 +36,12 @@ public class SteamVR_Settings : EditorWindow
 #endif
 
 	const BuildTarget recommended_BuildTarget = BuildTarget.StandaloneWindows64;
-	const bool recommended_ShowUnitySplashScreen = false;
+	const bool recommended_ShowUnitySplashScreen = true;
 	const bool recommended_DefaultIsFullScreen = false;
 	const int recommended_DefaultScreenWidth = 1024;
 	const int recommended_DefaultScreenHeight = 768;
 	const bool recommended_RunInBackground = true;
-	const ResolutionDialogSetting recommended_DisplayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
+	const ResolutionDialogSetting recommended_DisplayResolutionDialog = ResolutionDialogSetting.Disabled;
 	const bool recommended_ResizableWindow = true;
 	const D3D11FullscreenMode recommended_FullscreenMode = D3D11FullscreenMode.FullscreenWindow;
 	const bool recommended_VisibleInBackground = true;
