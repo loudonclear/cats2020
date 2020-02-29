@@ -20,14 +20,21 @@ public class catmovement : MonoBehaviour
     //"Heading"; a rotation value in degrees from 0 to 360 (rotating around y-axis)
     public float heading = 0f;
 
+    //Declare rigidbody
+    Rigidbody rigidbody;
+
     // Start is called before the first frame update
     void Start()
     {
+        //Assign rigidbody
+        rigidbody = GetComponent<Rigidbody>();
+
         //Set heading to a random value for now; will probably restrict this when cats spawn in
-        heading = Random.Range(0, 360);
+        //heading = Random.Range(0, 360);
+        heading = 0;
 
         //Rotate cat to face movement direction
-        transform.Rotate(0, heading + 90, 0);
+        transform.Rotate(0, heading, 0);
 
         //Set walking to true to give cat time to move before first turn
         walking = true;
@@ -51,13 +58,13 @@ public class catmovement : MonoBehaviour
     IEnumerator Turn()
     {
         //Make the cat stop for a second when turning
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         
         //Assign a random new heading value
         heading = Random.Range(0, 360);
 
         //Rotate cat to face movement direction
-        transform.Rotate(0, heading + 90, 0);
+        transform.Rotate(0, heading, 0);
 
         //Turn the cat's walking back on
         walking = true;
@@ -71,7 +78,7 @@ public class catmovement : MonoBehaviour
     {
         if (walking == true)
         {
-            transform.position += Time.deltaTime * speed * new Vector3(Mathf.Sin(heading), 0, Mathf.Cos(heading));
+            transform.position += Time.deltaTime * speed * transform.forward;
         }
     }
 }
