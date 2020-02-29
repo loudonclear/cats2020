@@ -1764,7 +1764,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   turninterval: 2
-  targetting: 0
+  targetinterval: 0
+  targettimer: 0
+  targeting: 0
   walking: 0
   heading: 171
 --- !u!65 &7638292564146543073
