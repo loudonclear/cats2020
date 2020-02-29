@@ -26,6 +26,9 @@ public class catmovement : MonoBehaviour
         //Set heading to a random value for now; will probably restrict this when cats spawn in
         heading = Random.Range(0, 360);
 
+        //Rotate cat to face movement direction
+        transform.Rotate(0, heading + 90, 0);
+
         //Set walking to true to give cat time to move before first turn
         walking = true;
 
@@ -52,6 +55,9 @@ public class catmovement : MonoBehaviour
         
         //Assign a random new heading value
         heading = Random.Range(0, 360);
+
+        //Rotate cat to face movement direction
+        transform.Rotate(0, heading + 90, 0);
 
         //Turn the cat's walking back on
         walking = true;
