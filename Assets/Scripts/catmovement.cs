@@ -17,8 +17,8 @@ public class catmovement : MonoBehaviour
     //Timer variable to count down until cat targets something
     public int targettimer = 0;
 
-    //Targetting boolean to check if cat is going after a breakable
-    public bool targetting = false;
+    //Targeting boolean to check if cat is going after a breakable
+    public bool targeting = false;
 
     //Walking boolean to check if cat is just walking forward
     public bool walking = true;
@@ -139,6 +139,29 @@ public class catmovement : MonoBehaviour
 
         //Sets the cat to walking
         walking = true;
+
+        //Sets the cat to targeting
+        targeting = true;
+    }
+
+    //Calls whenever a cat collides with a collider
+    void OnTriggerEnter(Collider other)
+    {
+        //Find object responsible for collision
+        GameObject collision = other.gameObject;
+
+        //Check if object is the target, and if cat is the one targeting the object
+        if (collision == currenttarget && targeting == true)
+        {
+            //Destroy the target
+            Destroy(currenttarget);
+
+            //Reset the targeting timer
+            targettimer = 0;
+
+            //Restart the cat moving around by calling TurnTimer()
+            StartCoroutine(TurnTimer());
+        }
     }
 
     // Update is called once per frame
