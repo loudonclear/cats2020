@@ -10,6 +10,9 @@ public class catspawner : MonoBehaviour
     //How long in seconds to wait for the next cat to spawn
     public float spawntimer;
     
+    //Target object for cat after spawning
+    public GameObject entertarget;
+    
     // Start is called before the first frame update
     void Start()
     {

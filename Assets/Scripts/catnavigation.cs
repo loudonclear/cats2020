@@ -10,6 +10,9 @@ public class catnavigation : MonoBehaviour
     public float timerwaiting;
     public float timertargeting;
 
+    //Basic speed of cat between spawning and beginning navigation
+    public float speed = 2;
+    
     //Timer interval variable; calls things when timer = this
     public float wandertimer = 2;
 
@@ -45,24 +48,35 @@ public class catnavigation : MonoBehaviour
 
     public bool targeting;
 
-    private GameObject currenttarget;
+    public bool spawning;
+
+    public GameObject currenttarget;
+
+    public GameObject prenavtarget;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Get level-entry target from spawner
+        prenavtarget = GameObject.Find("Spawner").GetComponent<catspawner>().entertarget;
+        
         //Assign navmesh agent to cat
         agent = GetComponent<NavMeshAgent>();
 
         //Set timer to first wander interval so cat begins wandering instantly
-        //timer = wandertimer;
+        //timerwander = wandertimer;
 
         //Start cat wandering around room
-        wander = true;
+        wander = false;
 
+        //Start cat targeting an object (doesn't work if set to true)
         targeting = false;
 
-        //Give cat starting position on entering room
-        agent.SetDestination(spawntarget.transform.position);
+        //Set cat to spawning, to give it spawn scripting
+        spawning = true;
+
+        //Set cat to face the pre-navigation target object, for entering level
+        transform.LookAt(prenavtarget.transform);
     }
 
     //Boolean for if the cat has reached its current destination
@@ -114,6 +128,32 @@ public class catnavigation : MonoBehaviour
         timerwaiting += Time.deltaTime;
         timertargeting += Time.deltaTime;
 
+        if (spawning)
+        {
+            //print(Vector3.Distance(transform.position, prenavtarget.transform.position));
+            if (Vector3.Distance(transform.position, prenavtarget.transform.position) < 0.2)
+            {
+                //Set booleans so cat begins wandering
+                spawning = false;
+                wander = true;
+
+                //Set timers to 0 so things make sense
+                timerwander = 0;
+                timerwaiting = 0;
+                timertargeting = 0;
+
+                //Assign spawntarget for initial navmesh pathfinding
+                spawntarget = GameObject.Find("SpawnTarget");
+
+                //Give cat starting position on entering room
+                agent.SetDestination(spawntarget.transform.position);
+            }
+            else
+            {
+                transform.position += Time.deltaTime * speed * transform.forward;
+            }
+        }
+
         //When cat is wandering and not going anywhere (current target reached/stuck)
         if ((wander && pathComplete()) || (wander && timerwaiting >= waitingtimer))
         {
@@ -146,7 +186,7 @@ public class catnavigation : MonoBehaviour
         }
 
         //Once the time has come to target something to break
-        if (timertargeting >= targettimer)
+        if (wander && timertargeting >= targettimer)
         {
             //Set booleans to prevent wandering
             wander = false;
