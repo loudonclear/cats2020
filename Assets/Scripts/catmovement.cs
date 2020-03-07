@@ -142,6 +142,7 @@ public class catmovement : MonoBehaviour
 
         //Sets the cat to targeting
         targeting = true;
+        
     }
 
     //Calls whenever a cat collides with a collider
@@ -167,9 +168,18 @@ public class catmovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
         if (walking == true)
         {
             transform.position += Time.deltaTime * speed * transform.forward;
+        }
+
+        LayerMask mask = LayerMask.GetMask("Furniture");
+
+        if (Physics.Raycast(transform.position, transform.forward, 10, mask))
+        {
+            print("A cat hit a wall");
         }
     }
 }
