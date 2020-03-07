@@ -1707,6 +1707,8 @@ GameObject:
   - component: {fileID: 1124611743092818239}
   - component: {fileID: 1124611743092818238}
   - component: {fileID: 7638292564146543073}
+  - component: {fileID: 1062261936429024246}
+  - component: {fileID: -8946463488838438086}
   m_Layer: 0
   m_Name: CAT
   m_TagString: Untagged
@@ -1757,7 +1759,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7634036399003398068}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c651ca767119209478812d8baaebd621, type: 3}
   m_Name: 
@@ -1782,6 +1784,44 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.336723, y: 4.992603, z: 5.9128075}
   m_Center: {x: -0.05848181, y: 2.4709117, z: 0.18609262}
+--- !u!195 &1062261936429024246
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7634036399003398068}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 6
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &-8946463488838438086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7634036399003398068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f9b194ceb898ef49b141d0d2a2affdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: 0
+  wandertimer: 3
+  wanderdist: 10
+  wander: 0
 --- !u!1 &7822831893550974216
 GameObject:
   m_ObjectHideFlags: 0
