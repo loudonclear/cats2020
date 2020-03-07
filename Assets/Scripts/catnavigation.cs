@@ -7,6 +7,7 @@ public class catnavigation : MonoBehaviour
 {
     //Timer variable; keeps track of time
     public float timer;
+    public float timer2;
 
     //Timer interval variable; calls things when timer = this
     public float wandertimer = 2;
@@ -23,14 +24,26 @@ public class catnavigation : MonoBehaviour
     //Whether or not cat is wandering room
     public bool wander;
 
+    //Navigation agent for this cat
     private NavMeshAgent agent;
 
-    private float pathtarget;
+    //Distance from cat to current navigation target
+    private float pathtargetdist;
+
+    //Spawning target object to give cat initial target
+    public GameObject spawntarget;
+
+    public GameObject targetpoint;
+
+    //Timer for if cat takes too long to reach target
+    public float waitingtimer = 5;
+
+    private float timeroffset;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Assign navmesh agent
+        //Assign navmesh agent to cat
         agent = GetComponent<NavMeshAgent>();
 
         //Set timer to first wander interval so cat begins wandering instantly
@@ -40,15 +53,18 @@ public class catnavigation : MonoBehaviour
         wander = true;
 
         //Give cat starting position on entering room
-        agent.SetDestination(new Vector3(-16, 0, 0));
+        agent.SetDestination(spawntarget.transform.position);
     }
 
     //Boolean for if the cat has reached its current destination
     protected bool pathComplete()
     {
-        pathtarget = Vector3.Distance(agent.destination, agent.transform.position);
-        if (pathtarget <= agent.stoppingDistance)
+        //Find distance between cat and target
+        pathtargetdist = Vector3.Distance(agent.destination, agent.transform.position);
+        //If cat is closer than navmeshagent stopping distance
+        if (pathtargetdist <= agent.stoppingDistance)
         {
+            //If the cat has reached the target or stopped moving
             if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
             {
                 return true;
@@ -61,11 +77,12 @@ public class catnavigation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
+        timer2 += Time.deltaTime;
         //When wandering and not en-route
-        if (wander && pathComplete())
+        if ((wander && pathComplete()) || (wander && timer2 >= waitingtimer))
         {
             //Add to timer until it reaches the wandering interval
-            timer += Time.deltaTime;
             if (timer >= wandertimer)
             {
                 //Find random point around cat within wanderdistance
@@ -78,10 +95,18 @@ public class catnavigation : MonoBehaviour
                 {
                     wandertarget = hit.position;
                 }
-                //Set the new target
-                agent.SetDestination(wandertarget);
-                //Reset the timer for next time
-                timer = 0;
+                
+                if (Vector3.Distance(wandertarget, transform.position) > 2)
+                {
+                    //Set the new target
+                    agent.SetDestination(wandertarget);
+                    //Reset the timer for next time
+                    timer = 0;
+                    timer2 = 0;
+                    print(wandertarget);
+                    Instantiate(targetpoint, wandertarget, Quaternion.identity);
+                }
+
             }
         }
     }
