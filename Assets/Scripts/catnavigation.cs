@@ -6,11 +6,14 @@ using UnityEngine.AI;
 public class catnavigation : MonoBehaviour
 {
     //Timer variable; keeps track of time
-    public float timer;
-    public float timer2;
+    public float timerwander;
+    public float timerwaiting;
+    public float timertargeting;
 
     //Timer interval variable; calls things when timer = this
     public float wandertimer = 2;
+
+    public float targettimer = 6;
 
     //Wandering distance limit
     public float wanderdist = 10;
@@ -40,6 +43,10 @@ public class catnavigation : MonoBehaviour
 
     private float timeroffset;
 
+    public bool targeting;
+
+    private GameObject currenttarget;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +58,8 @@ public class catnavigation : MonoBehaviour
 
         //Start cat wandering around room
         wander = true;
+
+        targeting = false;
 
         //Give cat starting position on entering room
         agent.SetDestination(spawntarget.transform.position);
@@ -74,16 +83,42 @@ public class catnavigation : MonoBehaviour
         return false;
     }
 
+    //Calls whenever a cat collides with a collider
+    void OnTriggerEnter(Collider other)
+    {
+        //Find object responsible for collision
+        GameObject collision = other.gameObject;
+
+        //Check if object is the target, and if this cat is the one targeting the object
+        if (collision == currenttarget && targeting == true)
+        {
+            //Destroy the target
+            Destroy(currenttarget);
+
+            //Reset the targeting timer
+            timertargeting = 0;
+            timerwander = 0;
+            timerwaiting = 0;
+
+            //Reset the booleans
+            targeting = false;
+            wander = true;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        timer2 += Time.deltaTime;
-        //When wandering and not en-route
-        if ((wander && pathComplete()) || (wander && timer2 >= waitingtimer))
+        //Various timer updates
+        timerwander += Time.deltaTime;
+        timerwaiting += Time.deltaTime;
+        timertargeting += Time.deltaTime;
+
+        //When cat is wandering and not going anywhere (current target reached/stuck)
+        if ((wander && pathComplete()) || (wander && timerwaiting >= waitingtimer))
         {
             //Add to timer until it reaches the wandering interval
-            if (timer >= wandertimer)
+            if (timerwander >= wandertimer)
             {
                 //Find random point around cat within wanderdistance
                 Vector3 randomDirection = Random.insideUnitSphere * wanderdist;
@@ -101,13 +136,51 @@ public class catnavigation : MonoBehaviour
                     //Set the new target
                     agent.SetDestination(wandertarget);
                     //Reset the timer for next time
-                    timer = 0;
-                    timer2 = 0;
+                    timerwander = 0;
+                    timerwaiting = 0;
                     print(wandertarget);
                     Instantiate(targetpoint, wandertarget, Quaternion.identity);
                 }
 
             }
+        }
+
+        //Once the time has come to target something to break
+        if (timertargeting >= targettimer)
+        {
+            //Set booleans to prevent wandering
+            wander = false;
+            targeting = true;
+
+            //Array for targeting
+            GameObject[] targets;
+
+            //Populates array with all breakables in scene
+            targets = GameObject.FindGameObjectsWithTag("Breakable");
+
+            //Variables for upcoming for loop
+            GameObject closest = null;
+            float distance = Mathf.Infinity;
+            Vector3 position = transform.position;
+
+            //Goes through each breakable in scene
+            //Keeps closest object so far, until all objects are iterated
+            foreach (GameObject target in targets)
+            {
+                Vector3 diff = target.transform.position - position;
+                float curDistance = diff.sqrMagnitude;
+                if (curDistance < distance)
+                {
+                    closest = target;
+                    distance = curDistance;
+                }
+            }
+
+            //Assigns target object as "closest" from above
+            currenttarget = closest;
+
+            //Sets new pathfinding destination for assigned target's position
+            agent.SetDestination(currenttarget.transform.position);
         }
     }
 }
