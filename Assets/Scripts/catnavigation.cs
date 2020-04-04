@@ -41,6 +41,8 @@ public class catnavigation : MonoBehaviour
 
     public GameObject targetpoint;
 
+    public GameObject centerpoint;
+
     //Timer for if cat takes too long to reach target
     public float waitingtimer = 5;
 
@@ -59,7 +61,9 @@ public class catnavigation : MonoBehaviour
     {
         //Get level-entry target from spawner
         prenavtarget = GameObject.Find("Spawner").GetComponent<catspawner>().entertarget;
-        
+
+        centerpoint = GameObject.Find("Centerpoint");
+
         //Assign navmesh agent to cat
         agent = GetComponent<NavMeshAgent>();
 
@@ -164,22 +168,45 @@ public class catnavigation : MonoBehaviour
                 Vector3 randomDirection = Random.insideUnitSphere * wanderdist;
                 randomDirection += transform.position;
                 //Add unit vector of displacement multiplied by the minimum wander distance to add that much to the wandering target
-                randomDirection += Vector3.Normalize(randomDirection - transform.position) * minwanderdist;
+                //randomDirection += Vector3.Normalize(randomDirection - transform.position) * minwanderdist;
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(randomDirection, out hit, wanderdist, 1))
                 {
                     wandertarget = hit.position;
                 }
-                
-                if (Vector3.Distance(wandertarget, transform.position) > 2)
+
+                //Calculate distance from cat's target to cat
+                float wandervectordist = Vector3.Distance(wandertarget, transform.position);
+
+                //Calculate distanc from cat's target to center of room
+                float wanderdistfromcenter = Vector3.Distance(wandertarget, centerpoint.transform.position);
+
+                //Calculate probability of cat's target being allowed; this is to prevent cats from just running into walls non-stop
+                //If a random value from 0 to 1 is less than this value, then the target is revoked and a new one is calculated
+                float wanderprob = 1 - (wanderdistfromcenter * 0.25f);
+
+                //print(wanderprob);
+
+                //The random value for testing wander targets
+                float randomvalue = Random.Range(0f, 1f);
+
+                //print(randomvalue);
+
+                //Check if the wander target is far enough away (to prevent small movements) and if the target passes the test above
+                if (wandervectordist > 2 && randomvalue < wanderprob)
                 {
                     //Set the new target
                     agent.SetDestination(wandertarget);
                     //Reset the timer for next time
                     timerwander = 0;
                     timerwaiting = 0;
-                    print(wandertarget);
+                    //print(wandertarget);
                     Instantiate(targetpoint, wandertarget, Quaternion.identity);
+                }
+
+                else
+                {
+                    print("Target didn't win the dice roll.");
                 }
 
             }
