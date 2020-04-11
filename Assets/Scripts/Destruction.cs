@@ -9,6 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(VRTK.SecondaryControllerGrabActions.VRTK_SwapControllerGrabAction))]
 public class Destruction : MonoBehaviour
 {
+    public GameObject[] pieces;
+
     [Space(7)]
     [Header("State")]
     [Space(2)]
@@ -57,6 +59,8 @@ public class Destruction : MonoBehaviour
     [Tooltip("Whether the object makes particles when it breaks")]
     public bool particlesOnBreak = false;
 
+    public float fadeSpeed = 0.00001f;
+
     //Private vars
     private AudioSource src;
     private ParticleSystem psys;
@@ -65,17 +69,44 @@ public class Destruction : MonoBehaviour
     private float sphereRadius = 0f;
 
     private Rigidbody rigidbody;
+    private MeshRenderer meshRenderer;
     private Collider coll;
-    private Rigidbody[] rigids;
-    private MeshRenderer[] meshRenderers;
+
+    private List<Rigidbody> rigids = new List<Rigidbody>();
+    private List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
+
 
     void Start()
     {
-        //Get the rigidbodies
-        rigids = gameObject.GetComponentsInChildren<Rigidbody>();
-        meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
-        coll = GetComponent<Collider>();
+        meshRenderer = GetComponent<MeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
+        coll = GetComponent<Collider>();
+
+
+        foreach (GameObject piece in pieces)
+        {
+            Rigidbody rb = piece.GetComponent<Rigidbody>();
+            if (rb == null)
+            {
+                rb = piece.AddComponent<Rigidbody>();
+            }
+
+            MeshCollider mc = piece.GetComponent<MeshCollider>();
+            if (mc == null)
+            {
+                mc = piece.AddComponent<MeshCollider>();
+                mc.convex = true;
+            }
+
+            rigids.Add(rb);
+
+            MeshRenderer mr = piece.GetComponent<MeshRenderer>();
+            if (mr != null)
+            {
+                meshRenderers.Add(mr);
+            }
+        }
+
 
         // VRTK
         VRTK.VRTK_InteractableObject interactableObject = GetComponent<VRTK.VRTK_InteractableObject>();
@@ -83,9 +114,8 @@ public class Destruction : MonoBehaviour
         interactableObject.secondaryGrabActionScript = GetComponent<VRTK.SecondaryControllerGrabActions.VRTK_SwapControllerGrabAction>();
 
         together = !startBroken;
-        SetPiecesKinematic(together);
 
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
+        SetPiecesKinematic(together);
 
         if (soundOnBreak)
             SetupSound();
@@ -121,9 +151,6 @@ public class Destruction : MonoBehaviour
          * being in the wrong place when they switch */
         //brokenObj.transform.position = togetherObj.transform.position;
 
-        //Make sure the right object is active
-        //togetherObj.SetActive(together);
-        //brokenObj.SetActive(!together);
         if (!together)
             Break();
 
@@ -184,8 +211,8 @@ public class Destruction : MonoBehaviour
     public void Break()
     {
         SetPiecesKinematic(false);
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
-        gameObject.GetComponent<Collider>().enabled = false;
+        meshRenderer.enabled = false;
+        coll.enabled = false;
 
         //Play the sound
         if (soundOnBreak)
@@ -196,8 +223,6 @@ public class Destruction : MonoBehaviour
 
         StartCoroutine("Fade");
     }
-
-    private float fadeSpeed = 0.00001f;
 
     IEnumerator Fade()
     {
@@ -227,7 +252,7 @@ public class Destruction : MonoBehaviour
         }
         foreach (MeshRenderer renderer in meshRenderers)
         {
-            //renderer.enabled = !valueIn;
+            renderer.enabled = !valueIn;
         }
         coll.enabled = valueIn;
         rigidbody.isKinematic = !valueIn;
