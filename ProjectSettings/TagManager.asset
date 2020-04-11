@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Breakable
   - Furniture
+  - ExcludeTeleport
+  - Spawnpoints
   layers:
   - Default
   - TransparentFX
