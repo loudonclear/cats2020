@@ -163,7 +163,7 @@ namespace VRTK
         [Header("Grab Settings")]
 
         [Tooltip("Determines if the Interactable Object can be grabbed.")]
-        public bool isGrabbable = false;
+        public bool isGrabbable = true;
         [Tooltip("If this is checked then the grab button on the controller needs to be continually held down to keep grabbing. If this is unchecked the grab button toggles the grab action with one button press to grab and another to release.")]
         public bool holdButtonToGrab = true;
         [Tooltip("If this is checked then the Interactable Object will stay grabbed to the controller when a teleport occurs. If it is unchecked then the Interactable Object will be released when a teleport occurs.")]

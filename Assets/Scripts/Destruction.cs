@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(VRTK.VRTK_InteractableObject))]
+[RequireComponent(typeof(VRTK.GrabAttachMechanics.VRTK_FixedJointGrabAttach))]
+[RequireComponent(typeof(VRTK.SecondaryControllerGrabActions.VRTK_SwapControllerGrabAction))]
 public class Destruction : MonoBehaviour
 {
-
     [Space(7)]
     [Header("State")]
     [Space(2)]
@@ -29,7 +33,7 @@ public class Destruction : MonoBehaviour
     [Tooltip("Whether the object breaks when it collides with something")]
     public bool breakOnCollision = true;
     [Tooltip("The minimum relative velocity (or momentum if useMomentum is true) to break the object")]
-    public float velocityToBreak = 1; // Velocity required to break object
+    public float velocityToBreak = 3; // Velocity required to break object
 
     [Space(7)]
     [Header("Breaking when nothing underneath")]
@@ -72,6 +76,11 @@ public class Destruction : MonoBehaviour
         meshRenderers = gameObject.GetComponentsInChildren<MeshRenderer>();
         coll = GetComponent<Collider>();
         rigidbody = GetComponent<Rigidbody>();
+
+        // VRTK
+        VRTK.VRTK_InteractableObject interactableObject = GetComponent<VRTK.VRTK_InteractableObject>();
+        interactableObject.grabAttachMechanicScript = GetComponent<VRTK.GrabAttachMechanics.VRTK_FixedJointGrabAttach>();
+        interactableObject.secondaryGrabActionScript = GetComponent<VRTK.SecondaryControllerGrabActions.VRTK_SwapControllerGrabAction>();
 
         together = !startBroken;
         SetPiecesKinematic(together);
@@ -188,7 +197,7 @@ public class Destruction : MonoBehaviour
         StartCoroutine("Fade");
     }
 
-    private float fadeSpeed = 0.0001f;
+    private float fadeSpeed = 0.00001f;
 
     IEnumerator Fade()
     {
@@ -218,7 +227,7 @@ public class Destruction : MonoBehaviour
         }
         foreach (MeshRenderer renderer in meshRenderers)
         {
-            renderer.enabled = !valueIn;
+            //renderer.enabled = !valueIn;
         }
         coll.enabled = valueIn;
         rigidbody.isKinematic = !valueIn;
