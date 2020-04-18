@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Breakage : MonoBehaviour
 {
@@ -11,14 +12,13 @@ public class Breakage : MonoBehaviour
 
     GameObject tvscreen;
 
-    TVmessage TVmessage;
+    //TVmessage TVmessage;
 
     // Start is called before the first frame update
     void Start()
     {
         tv = GameObject.Find("tv");
         tvscreen = GameObject.Find("Description");
-        TVmessage = tvscreen.GetComponent<TVScreen>();
         itemvalue = 500;
     }
 
@@ -30,6 +30,6 @@ public class Breakage : MonoBehaviour
 
     void OnDestroy()
     {
-        TVmessage.value -= itemvalue;
+        tvscreen.GetComponent<TVScreen>().value -= itemvalue;
     }
 }
