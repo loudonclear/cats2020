@@ -1275,12 +1275,12 @@ GameObject:
   - component: {fileID: 872886161898687274}
   - component: {fileID: 2330720081142840403}
   - component: {fileID: 5692396048603083972}
-  - component: {fileID: 1623628051989822099}
   - component: {fileID: 1623628051989822102}
   - component: {fileID: 1623628051989822103}
   - component: {fileID: 1623628051989822096}
   - component: {fileID: 1623628051989822097}
   - component: {fileID: 1623628051989822098}
+  - component: {fileID: 348773917}
   m_Layer: 0
   m_Name: vase
   m_TagString: Untagged
@@ -1295,9 +1295,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1623628051989822108}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0.776, y: 1.046, z: 2.594}
-  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_Children:
   - {fileID: 287367076598648481}
   - {fileID: 7362558930770518512}
@@ -1402,7 +1402,7 @@ Transform:
   - {fileID: 492385048636669021}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &2330720081142840403
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1450,20 +1450,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &1623628051989822099
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1623628051989822108}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2124705421725058983, guid: 9dd9c7da2c36b74429fc680013267a6e, type: 3}
 --- !u!54 &1623628051989822102
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1478,7 +1464,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &1623628051989822103
 MonoBehaviour:
@@ -1672,6 +1658,19 @@ MonoBehaviour:
   clips: []
   particlesOnBreak: 0
   fadeSpeed: 0.00001
+--- !u!65 &348773917
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623628051989822108}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0040073916, y: 0.0038515816, z: 0.008165384}
+  m_Center: {x: -0.0000111937525, y: -0.0000858365, z: 0.0040826923}
 --- !u!1 &1639728543976134364
 GameObject:
   m_ObjectHideFlags: 0
