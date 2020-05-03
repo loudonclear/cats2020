@@ -6,12 +6,13 @@ using VRTK;
 public class StartGame : MonoBehaviour
 {
     public GameObject[] menu;
+    public GameObject spawners;
 
     private 
     void Start()
     {
+        FindObjectOfType<AudioManager>().PlayMusic("Menu");
         GetComponent<VRTK_InteractableObject>().InteractableObjectTouched += new InteractableObjectEventHandler(ObjectGrabbed);
-        //GetComponent<VRTK_InteractableObject>().InteractableObjectGrabbed += new InteractableObjectEventHandler(ObjectGrabbed);
     }
 
     private void ObjectGrabbed(object sender, InteractableObjectEventArgs e)
@@ -20,5 +21,8 @@ public class StartGame : MonoBehaviour
         {
             obj.SetActive(false);
         }
+        spawners.SetActive(true);
+
+        FindObjectOfType<AudioManager>().PlayMusic("Level");
     }
 }
