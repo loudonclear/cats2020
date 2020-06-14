@@ -8,7 +8,7 @@ public class catnavigation : MonoBehaviour
     //Timer variable; keeps track of time
     public float timerwander;
     public float timerwaiting;
-    public float timertargeting;
+    //public float timertargeting;
 
     //Basic speed of cat between spawning and beginning navigation
     public float speed = 2;
@@ -16,7 +16,7 @@ public class catnavigation : MonoBehaviour
     //Timer interval variable; calls things when timer = this
     public float wandertimer = 2;
 
-    public float targettimer = 6;
+    //public float targettimer = 6;
 
     //Wandering distance limit
     public float wanderdist = 10;
@@ -52,9 +52,14 @@ public class catnavigation : MonoBehaviour
 
     public bool spawning;
 
+    public bool lottery;
+
     public GameObject currenttarget;
 
     public GameObject prenavtarget;
+
+    //Timer object over cat when destroying your things
+    public GameObject DestroyTimerGETTHECAT;
 
     // Start is called before the first frame update
     void Start()
@@ -62,7 +67,7 @@ public class catnavigation : MonoBehaviour
         //Array for spawn points to determine initial destination for new cat
         GameObject[] spawnpoints;
 
-        //Populates array with all breakables in scene
+        //Populates array with all spawn points in scene
         spawnpoints = GameObject.FindGameObjectsWithTag("Spawnpoints");
 
         //Variables for upcoming for loop
@@ -70,7 +75,7 @@ public class catnavigation : MonoBehaviour
         float distance = Mathf.Infinity;
         Vector3 position = transform.position;
 
-        //Goes through each breakable in scene
+        //Goes through each spawn point in scene
         //Keeps closest object so far, until all objects are iterated
         foreach (GameObject point in spawnpoints)
         {
@@ -95,10 +100,10 @@ public class catnavigation : MonoBehaviour
         //Set timer to first wander interval so cat begins wandering instantly
         //timerwander = wandertimer;
 
-        //Start cat wandering around room
+        //Set wander boolean to false until end of spawning movement
         wander = false;
 
-        //Start cat targeting an object (doesn't work if set to true)
+        //Set targeting boolean to false until cat is chosen by CatHerder script
         targeting = false;
 
         //Set cat to spawning, to give it spawn scripting
@@ -135,18 +140,30 @@ public class catnavigation : MonoBehaviour
         //Check if object is the target, and if this cat is the one targeting the object
         if (collision == currenttarget && targeting == true)
         {
-            //Destroy the target
-            Destroy(currenttarget);
+            //Play out the target destruction method
+            StartCoroutine(targetDestruction());
 
-            //Reset the targeting timer
-            timertargeting = 0;
-            timerwander = 0;
-            timerwaiting = 0;
-
-            //Reset the booleans
-            targeting = false;
-            wander = true;
+            //debug print
+            print("A cat has reached its target");
         }
+    }
+
+    //Method for destruction of targets when cats reach them after targeting them
+    IEnumerator targetDestruction()
+    {
+        Instantiate(DestroyTimerGETTHECAT, transform.position, Quaternion.identity, transform);
+
+        print("now waiting...");
+        yield return new WaitForSeconds(5);
+        print("waiting complete!");
+        //Reset the targeting timer
+        //timertargeting = 0;
+        timerwander = 0;
+        timerwaiting = 0;
+
+        //Reset the booleans
+        targeting = false;
+        wander = true;
     }
 
     // Update is called once per frame
@@ -155,7 +172,7 @@ public class catnavigation : MonoBehaviour
         //Various timer updates
         timerwander += Time.deltaTime;
         timerwaiting += Time.deltaTime;
-        timertargeting += Time.deltaTime;
+        //timertargeting += Time.deltaTime;
 
         //Moving the cat during the initial spawning, before it can use the navmesh properly
         if (spawning)
@@ -172,7 +189,7 @@ public class catnavigation : MonoBehaviour
                 //Set timerwander to non-zero value to speed up cat's initial wandering
                 timerwander = 1;
                 timerwaiting = 0;
-                timertargeting = 0;
+                //timertargeting = 0;
 
                 //Turn on the navmesh agent if the cat spawned off of it
                 agent.enabled = false;
@@ -196,6 +213,11 @@ public class catnavigation : MonoBehaviour
             //Add to timer until it reaches the wandering interval
             if (timerwander >= wandertimer)
             {
+                //Check if booleans have messed up and a targeting cat is on the wander method
+                if (targeting)
+                {
+                    print("Cat is broken; setting new target while meant to be targeting");
+                }
                 //Find random point around cat within wanderdistance
                 Vector3 randomDirection = Random.insideUnitSphere * wanderdist;
                 randomDirection += transform.position;
@@ -244,12 +266,15 @@ public class catnavigation : MonoBehaviour
             }
         }
 
-        //Once the time has come to target something to break
-        if (wander && timertargeting >= targettimer)
+        //When the cat has been selected for targeting a breakable
+        if (lottery)
         {
             //Set booleans to prevent wandering
             wander = false;
             targeting = true;
+
+            //Add ui element to cat to indicate it is targeting something (debugging purposes)
+            //Instantiate(DestroyTimerGETTHECAT, transform.position + new Vector3(0, 2, 0), Quaternion.identity, transform);
 
             //Array for targeting
             GameObject[] targets;
@@ -257,29 +282,34 @@ public class catnavigation : MonoBehaviour
             //Populates array with all breakables in scene
             targets = GameObject.FindGameObjectsWithTag("Breakable");
 
+            currenttarget = targets[Random.Range(0, targets.Length)];
+
             //Variables for upcoming for loop
-            GameObject closest = null;
-            float distance = Mathf.Infinity;
-            Vector3 position = transform.position;
+            //GameObject closest = null;
+            //float distance = Mathf.Infinity;
+            //Vector3 position = transform.position;
 
             //Goes through each breakable in scene
             //Keeps closest object so far, until all objects are iterated
-            foreach (GameObject target in targets)
-            {
-                Vector3 diff = target.transform.position - position;
-                float curDistance = diff.sqrMagnitude;
-                if (curDistance < distance)
-                {
-                    closest = target;
-                    distance = curDistance;
-                }
-            }
+            //foreach (GameObject target in targets)
+            //{
+            //    Vector3 diff = target.transform.position - position;
+            //    float curDistance = diff.sqrMagnitude;
+            //    if (curDistance < distance)
+            //    {
+            //        closest = target;
+            //        distance = curDistance;
+            //    }
+            //}
 
-            //Assigns target object as "closest" from above
-            currenttarget = closest;
+            ////Assigns target object as "closest" from above
+            //currenttarget = closest;
 
             //Sets new pathfinding destination for assigned target's position
             agent.SetDestination(currenttarget.transform.position);
+
+            //Set "lottery" to false to prevent update method shenanigans
+            lottery = false;
         }
     }
 }

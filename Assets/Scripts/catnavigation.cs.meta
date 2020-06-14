@@ -3,7 +3,14 @@ guid: 9f9b194ceb898ef49b141d0d2a2affdf
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - spawntarget: {instanceID: 0}
+  - targetpoint: {instanceID: 0}
+  - centerpoint: {instanceID: 0}
+  - currenttarget: {instanceID: 0}
+  - prenavtarget: {instanceID: 0}
+  - DestroyTimerGETTHECAT: {fileID: 3329239549874362911, guid: ba78df01f3f52594da6f6948159479a5,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

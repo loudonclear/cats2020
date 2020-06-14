@@ -31,18 +31,18 @@ public class catspawner : MonoBehaviour
 
     IEnumerator CatSpawnTimer()
     {
-        //Wait for next spawn
-        yield return new WaitForSeconds(spawntimer);
-
-        //Create next cat at spawner
-        Instantiate(cat, transform.position, transform.rotation);
-
-        //Iterate the cat counter
-        howmanycats += 1;
-
         //Check if cat limits have been gone-even-further-beyonded
-        if (howmanycats > maxcats)
+        if (howmanycats < maxcats)
         {
+            //Wait for next spawn
+            yield return new WaitForSeconds(spawntimer);
+
+            //Create next cat at spawner
+            Instantiate(cat, transform.position, transform.rotation);
+
+            //Iterate the cat counter
+            howmanycats += 1;
+
             //Restart timer to repeat ad infinitum
             StartCoroutine(CatSpawnTimer());
         }
