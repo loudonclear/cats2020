@@ -75,9 +75,16 @@ public class Destruction : MonoBehaviour
     private List<Rigidbody> rigids = new List<Rigidbody>();
     private List<MeshRenderer> meshRenderers = new List<MeshRenderer>();
 
+    //Breakage script on same object
+    public Breakage Breakage;
 
     void Start()
     {
+        //Get breakage script from same object
+        //Currently done manually
+        //Breakage = transform.parent.gameObject.GetComponent<Breakage>();
+
+
         meshRenderer = GetComponent<MeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();
@@ -210,6 +217,10 @@ public class Destruction : MonoBehaviour
 
     public void Break()
     {
+        //When object breaks, call Breakage.ItemValueSubtraction to subtract item value from total room value
+        Breakage.ItemValueSubtraction();
+
+
         SetPiecesKinematic(false);
         meshRenderer.enabled = false;
         coll.enabled = false;

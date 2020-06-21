@@ -36,7 +36,7 @@ public class Breakage : MonoBehaviour
 
     // When the object is destroyed by the cats (may replace trigger depending on
     // breakage mechanics later)
-    void OnDestroy()
+    public void ItemValueSubtraction()
     {
         //Subtract the item's dollar value from the value on the tv text object
         //This updates the tv with a new, lower room value

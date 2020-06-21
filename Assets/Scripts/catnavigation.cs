@@ -173,7 +173,7 @@ public class catnavigation : MonoBehaviour
         //Apply a physics force toward the center of the room
         //May want to add a random element to it later
         throwvector = throwtarget.transform.position - currenttarget.transform.position;
-        currenttarget.GetComponent<Rigidbody>().AddForce(throwvector * 50);
+        currenttarget.GetComponent<Rigidbody>().AddForce(throwvector * 150);
 
         //Reset the targeting timer
         //timertargeting = 0;
