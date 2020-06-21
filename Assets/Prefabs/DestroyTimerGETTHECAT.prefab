@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -7967443191586842913}
   - component: {fileID: 5378887303719214415}
   - component: {fileID: 1778167187575755380}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: DestroyTimerGETTHECAT
   m_TagString: Untagged
   m_Icon: {fileID: 0}

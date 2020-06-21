@@ -56,10 +56,19 @@ public class catnavigation : MonoBehaviour
 
     public GameObject currenttarget;
 
+    public GameObject subtarget;
+
     public GameObject prenavtarget;
 
     //Timer object over cat when destroying your things
     public GameObject DestroyTimerGETTHECAT;
+
+    //Target for objects to be thrown at in room
+    //May change later to add randomness to it
+    public GameObject throwtarget;
+
+    //Vector for throwing of object
+    private Vector3 throwvector;
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +102,9 @@ public class catnavigation : MonoBehaviour
 
         //Center of the room for determining probabilities of chosen navmesh destinations
         centerpoint = GameObject.Find("Centerpoint");
+
+        //Center of the room for aiming objects to throw
+        throwtarget = GameObject.Find("Throw Target");
 
         //Assign navmesh agent to cat
         agent = GetComponent<NavMeshAgent>();
@@ -134,11 +146,12 @@ public class catnavigation : MonoBehaviour
     //Calls whenever a cat collides with a collider
     void OnTriggerEnter(Collider other)
     {
+        print("Collision");
         //Find object responsible for collision
         GameObject collision = other.gameObject;
 
         //Check if object is the target, and if this cat is the one targeting the object
-        if (collision == currenttarget && targeting == true)
+        if (collision == subtarget && targeting == true)
         {
             //Play out the target destruction method
             StartCoroutine(targetDestruction());
@@ -151,11 +164,17 @@ public class catnavigation : MonoBehaviour
     //Method for destruction of targets when cats reach them after targeting them
     IEnumerator targetDestruction()
     {
-        Instantiate(DestroyTimerGETTHECAT, transform.position, Quaternion.identity, transform);
+        Instantiate(DestroyTimerGETTHECAT, transform.position + new Vector3(0, 1, 0), Quaternion.identity, transform);
 
         print("now waiting...");
         yield return new WaitForSeconds(5);
         print("waiting complete!");
+
+        //Apply a physics force toward the center of the room
+        //May want to add a random element to it later
+        throwvector = throwtarget.transform.position - currenttarget.transform.position;
+        currenttarget.GetComponent<Rigidbody>().AddForce(throwvector * 50);
+
         //Reset the targeting timer
         //timertargeting = 0;
         timerwander = 0;
@@ -283,6 +302,7 @@ public class catnavigation : MonoBehaviour
             targets = GameObject.FindGameObjectsWithTag("Breakable");
 
             currenttarget = targets[Random.Range(0, targets.Length)];
+            subtarget = currenttarget.transform.FindChild("subtarget").gameObject;
 
             //Variables for upcoming for loop
             //GameObject closest = null;
@@ -306,7 +326,7 @@ public class catnavigation : MonoBehaviour
             //currenttarget = closest;
 
             //Sets new pathfinding destination for assigned target's position
-            agent.SetDestination(currenttarget.transform.position);
+            agent.SetDestination(subtarget.transform.position);
 
             //Set "lottery" to false to prevent update method shenanigans
             lottery = false;
